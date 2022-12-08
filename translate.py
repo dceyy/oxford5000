@@ -1,41 +1,47 @@
-from googletrans import Translator
 import random
-import time
-translator = Translator()
-file = open("words.txt", "r")
-dict={}
-for line in file.readlines():
-    line=line.strip()
-    word = line.split(' ')
-    dict[str(word[0])]={
-        "type":word[1],
-        "level":word[2],
-    }
+from colorama import Fore, Back, Style
+from googletrans import Translator
+translate = Translator()
+w=[]
+redBack=Back.RED
+greenBack=Back.GREEN
+green=Fore.GREEN
+red=Fore.RED
+blue=Fore.BLUE
+yellow=Fore.LIGHTYELLOW_EX
+cyan=Fore.CYAN
+reset=Style.RESET_ALL
 
+with open("words.txt", "r") as f:
+    words = f.readlines()
+    for word in words:
+        l=[]
+        word = word.strip()
+        word=word.split(" ")
+        for i in word:
+            if i!="":
+                l.append(i)
+        w.append(l)
 
-if __name__ == '__main__':
+        
+if __name__=="__main__":
+    print(Fore.MAGENTA+
+            """\n\tIMPROVE YOUR ENGLISH\n"""+reset)
+
     while True:
-        randomword=random.choice(list(dict.keys()))
-        mean=translator.translate(randomword, dest='tr').text
-        try:
-            print("\nword: {} type:{} level:{}".format(randomword,dict[randomword]["type"],dict[randomword]["level"]))
-            meaingFromUser=input("what is the meaning of {}: ".format(randomword))
-            if meaingFromUser==mean:
-                print("Correct!")
-                time.sleep(0.2)
-                delete=input("Do you want to delete this word? (y/n): ")
-                if delete=="y":
-                    del dict[randomword]
-                    print("Deleted!")
-                    time.sleep(0.2)
-                    if len(dict)==0:
-                        print("All words deleted!")
-                        break
-            else:
-                print("Wrong")
-                time.sleep(0.2)
-                print("Meaning: '{}'".format(mean))
-        except:
-            print("Error")
-        input("Press enter to continue ")
+        print(cyan+"press q to quit"+reset)
+        wr=random.choice(w)
+        word=wr[0].lower()
+        meaning=translate.translate(word, dest='tr').text.lower().capitalize()
+       
+        print(f"Word: {blue} {word.capitalize()} {reset} Type: {yellow} {wr[1].capitalize()} {reset} Level: {green} {wr[2]} {reset}")
+        k=input("Enter the meaning of the word: ").capitalize()
+        if k=="q" or k=="Q":
+            break
+        elif k==meaning:
+            print(f"{greenBack}CORRECT!!{reset}\n")
+
+        elif k!=meaning:
+            print(f"{redBack}WRONG!!{reset} The meaning of the word is {cyan} {meaning} {reset}\n")
+            
 
